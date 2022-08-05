@@ -18,6 +18,7 @@ let rooms = [];
 //create route to check if room exists
 app.get('/api/room-exists/:roomId', (req, res) => {
   const { roomId } = req.params;
+  console.log(222, roomId);
   const room = rooms.find((room) => room.id === roomId);
 
   if (room) {
@@ -66,8 +67,7 @@ io.on('connection', (socket) => {
 
 //socket.io handlers
 const createNewRoomHandler = (data, socket) => {
-  console.log('방장이 새롭게 만든 방');
-  console.log('data', data);
+  console.log('create-new-room 실행', data);
 
   const { identity } = data;
 
@@ -122,7 +122,7 @@ const joinRoomHandler = (data, socket) => {
   //add new user to connected users array
   connectedUsers = [...connectedUsers, newUser];
 
-  //peer 연결을 준비하기 위해 이미 이 방에 있는 모든 사용자에게 전송
+  //peer 연결을 준비하기 위해 이미 이 방에 있는 모든 사용자에게 전송(여러 사용자용)
   room.connectedUsers.forEach((user) => {
     if (user.socketId !== socket.id) {
       const data = {
