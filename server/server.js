@@ -155,6 +155,11 @@ const disconnectHandler = (socket) => {
     // 방을 떠난 나머지 사용자에게 이벤트를 내보냅니다.
     //방에 머무를 사용자 수가 0인 경우 방을 닫습니다.
     if (room.connectedUsers.length > 0) {
+
+      //emit to all users which are still in the room that user disconnected
+      io.to(room.id).emit('user-disconnected', { socketId: socket.id });
+
+      //emit an event to rest of the users which left in the room new connectedUsers in room
       io.to(room.id).emit('room-update', {
         connectedUsers: room.connectedUsers,
       });
